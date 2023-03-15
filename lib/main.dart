@@ -232,7 +232,7 @@ class _AgregarAlumnoScreenState extends State<AgregarAlumnoScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime(1980, 8),
       lastDate: DateTime(2101),
     );
     return picked;
