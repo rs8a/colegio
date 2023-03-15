@@ -28,12 +28,17 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  cloud_firestore: ^4.4.4
   cupertino_icons: ^1.0.2
   dotted_border: ^2.0.0+3
+  email_validator: ^2.1.17
+  equatable: ^2.0.5
+  firebase_auth: ^4.2.10
   firebase_core: ^2.7.1
   firebase_storage: ^11.0.15
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.2
   image_picker: ^0.8.7
   intl: ^0.17.0
   path: ^1.8.2
@@ -57,7 +62,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/logo.jpg
+    - assets/logo_colegio.png
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

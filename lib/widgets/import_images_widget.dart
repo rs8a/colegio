@@ -57,7 +57,7 @@ class _ImportImagesWidgetState extends State<ImportImagesWidget> {
         alignment: Alignment.topCenter,
         children: [
           ImageAvatarWidget(
-            placeholder: 'assets/logo.jpg',
+            placeholder: 'assets/logo_colegio.png',
             maxHeight: widget.maxHeight,
             maxWidth: widget.maxWidth,
             radius: 10,

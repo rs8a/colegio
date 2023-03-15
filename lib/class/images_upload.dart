@@ -251,7 +251,9 @@ class _ImageUploadPageState extends State<ImageUploadPage>
               child: SizedBox(
                 width: 200,
                 height: 200,
-                child: CircularProgressIndicator(),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
             ),
             const SizedBox(height: 20),
