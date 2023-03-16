@@ -40,160 +40,185 @@ class _AgregarAlumnoScreenState extends State<AgregarAlumnoScreen> {
         key: formKey,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Text('Nombre'),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: nameController,
-                            textCapitalization: TextCapitalization.words,
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Debe ingresar nombre completo';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Text('Fecha de nacimiento'),
-                        const SizedBox(width: 8),
-                        Expanded(
-                            child: TextFormField(
-                          controller: dateController,
-                          readOnly: true,
-                          onTap: () async {
-                            _selectDate(context).then((value) {
-                              birthDay = value;
-                              if (value != null) {
-                                dateController.text = value.onlyDate(
-                                    format: 'dd \'de\' MMMM \'de\' yyyy');
-                              }
-                            });
-                          },
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Debe ingresar fecha de nacimiento';
-                            }
-                            return null;
-                          },
-                        )),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('DNI'),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: dniController,
-                            textCapitalization: TextCapitalization.words,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          Alumno alumno = Alumno.newItem();
-                          alumno.nombre = nameController.text.trim();
-                          alumno.curso = cursoSeleccionado;
-                          alumno.nacimiento = birthDay;
-                          alumno.dni = dniController.text.trim();
-                          if (imageSelected is XFile && mounted) {
-                            final uploadedLinks = await ImagesUpload(
-                              context,
-                              filesList: [imageSelected],
-                              directory: 'almunos',
-                              documetId: alumno.documentId,
-                              uniqueName: alumno.documentId,
-                            ).showUploadDetailDetail();
-                            if (uploadedLinks.isNotEmpty) {
-                              alumno.fotoUrl = uploadedLinks.first;
-                            }
-                          } else {
-                            alumno.fotoUrl = imageSelected ?? '';
-                          }
-                          alumno.saveItem();
-                          setState(() {
-                            nameController.text = '';
-                            cursoSeleccionado = cursos.first;
-                            birthDay = null;
-                            dniController.text = '';
-                            dateController.text = '';
-                            imageSelected = null;
-                          });
-                        }
-                      },
-                      child: const Text('Guardar Alumno'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Column(
+          child: LayoutBuilder(builder: (context, constrains) {
+            if (constrains.maxWidth >= 680) {
+              return Row(
                 children: [
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: ImportImagesWidget(
-                      name: 'Foto',
-                      image: imageSelected,
-                      onImport: (photoFile) {
-                        setState(() {
-                          imageSelected = photoFile;
-                        });
-                      },
-                      onRemove: () {
-                        setState(() {
-                          imageSelected = null;
-                        });
-                      },
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Text('Curso'),
-                      const SizedBox(width: 8),
-                      DropdownButton<String>(
-                        value: cursoSeleccionado,
-                        items: [
-                          ...cursos.map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              cursoSeleccionado = value;
-                            });
-                            FocusScope.of(context).unfocus();
-                          }
-                        },
-                      ),
-                    ],
+                  cursoInfoWidget(context),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: alumnoInfoWidget(context),
                   ),
                 ],
-              )
-            ],
-          ),
+              );
+            }
+            return Column(
+              children: [
+                cursoInfoWidget(context),
+                const SizedBox(height: 16),
+                alumnoInfoWidget(context),
+              ],
+            );
+          }),
         ),
       ),
+    );
+  }
+
+  Column cursoInfoWidget(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          width: 200,
+          child: ImportImagesWidget(
+            name: 'Foto',
+            image: imageSelected,
+            onImport: (photoFile) {
+              setState(() {
+                imageSelected = photoFile;
+              });
+            },
+            onRemove: () {
+              setState(() {
+                imageSelected = null;
+              });
+            },
+          ),
+        ),
+        Row(
+          children: [
+            const Text('Curso'),
+            const SizedBox(width: 8),
+            DropdownButton<String>(
+              value: cursoSeleccionado,
+              items: [
+                ...cursos.map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
+                ),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    cursoSeleccionado = value;
+                  });
+                  FocusScope.of(context).unfocus();
+                }
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Column alumnoInfoWidget(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Text('Nombre'),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TextFormField(
+                controller: nameController,
+                textCapitalization: TextCapitalization.words,
+                validator: (String? value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Debe ingresar nombre completo';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            const Text('Fecha de nacimiento'),
+            const SizedBox(width: 8),
+            Expanded(
+                child: TextFormField(
+              controller: dateController,
+              readOnly: true,
+              onTap: () async {
+                _selectDate(context).then((value) {
+                  birthDay = value;
+                  if (value != null) {
+                    dateController.text =
+                        value.onlyDate(format: 'dd \'de\' MMMM \'de\' yyyy');
+                  }
+                });
+              },
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Debe ingresar fecha de nacimiento';
+                }
+                return null;
+              },
+            )),
+          ],
+        ),
+        Row(
+          children: [
+            const Text('DNI'),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TextFormField(
+                controller: dniController,
+                textCapitalization: TextCapitalization.words,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () async {
+            if (formKey.currentState!.validate()) {
+              Alumno alumno = Alumno.newItem();
+              alumno.nombre = nameController.text.trim();
+              alumno.curso = cursoSeleccionado;
+              alumno.nacimiento = birthDay;
+              alumno.dni = dniController.text.trim();
+              if (imageSelected is XFile && mounted) {
+                final uploadedLinks = await ImagesUpload(
+                  context,
+                  filesList: [imageSelected],
+                  directory: 'almunos',
+                  documetId: alumno.documentId,
+                  uniqueName: alumno.documentId,
+                ).showUploadDetailDetail();
+                if (uploadedLinks.isNotEmpty) {
+                  alumno.fotoUrl = uploadedLinks.first;
+                }
+              } else {
+                alumno.fotoUrl = imageSelected ?? '';
+              }
+              alumno.saveItem();
+              setState(() {
+                nameController.text = '';
+                cursoSeleccionado = cursos.first;
+                birthDay = null;
+                dniController.text = '';
+                dateController.text = '';
+                imageSelected = null;
+              });
+            }
+          },
+          child: const Text('Guardar Alumno'),
+        ),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     BlocProvider.of<AuthBloc>(context).add(SignedOutEvent());
+        //   },
+        //   child: const Text('Cerrar sesion'),
+        // ),
+      ],
     );
   }
 

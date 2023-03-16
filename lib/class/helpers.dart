@@ -6,6 +6,6 @@ List<String> cursos = [
   '2do Ciencias y humanidades',
   '2do Informatica',
   '2do Administracion de empresas',
-  '3do Informatica',
-  '3do Administracion de empresas'
+  '3ro Informatica',
+  '3ro Administracion de empresas'
 ];

@@ -1,6 +1,6 @@
 # colegio
 
-A new Flutter project.
+Controlador alumnos.
 
 ## Getting Started
 
