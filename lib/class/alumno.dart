@@ -27,6 +27,9 @@ class Alumno extends RSObject {
   String? get fotoUrl => stringFromKey('fotoUrl');
   set fotoUrl(String? fotoUrl) => setObject('fotoUrl', fotoUrl);
 
+  bool get createdCard => boolFromKey('createdCard');
+  set createdCard(bool? createdCard) => setObject('createdCard', createdCard);
+
   @override
   List<Object?> get props => [
         ...super.props,
@@ -35,5 +38,6 @@ class Alumno extends RSObject {
         nacimiento,
         curso,
         fotoUrl,
+        createdCard,
       ];
 }

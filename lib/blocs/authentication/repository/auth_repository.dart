@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart' as fir_store;
+import 'package:colegio/class/alumno.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fir_auth;
 
 import '../../../class/user.dart';
@@ -42,6 +43,24 @@ class AuthRepository {
       }
       return null;
     });
+  }
+
+  Future<List<Alumno>> getAlumnos() {
+    print('entra aqui??');
+    try {
+      return fir_store.FirebaseFirestore.instance
+          .collection('alumnos')
+          .get()
+          .then((snapshot) {
+        print('snapshot:$snapshot');
+        return snapshot.docs
+            .map((e) => Alumno(documentId: e.id, data: e.data()))
+            .toList();
+      });
+    } catch (e) {
+      print(e);
+      return Future.value([]);
+    }
   }
 
   Stream<User> userData(User firUser) => fir_store.FirebaseFirestore.instance

@@ -27,7 +27,12 @@ class MainScreen extends StatelessWidget {
     if (state is AuthenticatedState) {
       return state.userLoaded
           ? const HomeScreen()
-          : const Center(child: CircularProgressIndicator());
+          : Center(
+              child: ElevatedButton(
+                  onPressed: () {
+                    BlocProvider.of<AuthBloc>(context).add(SignedOutEvent());
+                  },
+                  child: const Text('Cerrar sesion')));
     } else if (state is UnauthenticatedState) {
       return const LoginScreen();
     } else if (state is FailureState) {

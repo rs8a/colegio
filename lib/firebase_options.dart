@@ -53,12 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDAsRypQpiFgLqgwjBFlCMIokHVIF5r-2g',
-    appId: '1:914799772705:web:3853d673513ddcdef58f60',
-    messagingSenderId: '914799772705',
-    projectId: 'colegio-9fec5',
-    authDomain: 'colegio-9fec5.firebaseapp.com',
-    storageBucket: 'colegio-9fec5.appspot.com',
-    measurementId: 'G-HDSMJ2NN4T',
+    apiKey: 'AIzaSyDj154phFecyB_AL6ahWWAfpO2FgbAjHtk',
+    appId: '1:12790634062:web:b1db7b562d4c810703151f',
+    messagingSenderId: '12790634062',
+    projectId: 'colegio2-4c1c7',
+    authDomain: 'colegio2-4c1c7.firebaseapp.com',
+    storageBucket: 'colegio2-4c1c7.appspot.com',
+    measurementId: 'G-3C5K3MVGP8',
   );
 }

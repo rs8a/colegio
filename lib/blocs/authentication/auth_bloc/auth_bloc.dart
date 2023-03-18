@@ -22,27 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         .listen((user) => add(ChangedUserEvent(user, false)));
 
     on<ChangedUserEvent>((event, emit) async {
-      // await Future.delayed(const Duration(seconds: 3));
-      if (event.user != User.empty) {
-        _userDataListener?.cancel();
-
-        _userDataListener =
-            _authRepository.userData(event.user).listen((user) async {
-          if (state is AuthenticatedState) {
-            if (user != (state as AuthenticatedState).user) {
-              add(ChangedUserEvent(user, true));
-            }
-          }
-        });
-
-        emit(AuthenticatedState(
-          event.user,
-          event.userLoaded,
-        ));
-      } else {
-        _userDataListener?.cancel();
-        emit(UnauthenticatedState());
-      }
+      emit(AuthenticatedState(event.user, true));
     });
 
     on<SignedOutEvent>((event, emit) async {
