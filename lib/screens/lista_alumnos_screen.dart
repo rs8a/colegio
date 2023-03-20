@@ -50,7 +50,7 @@ class _ListaAlumnosScreenState extends State<ListaAlumnosScreen> {
                       cacheEnabled: true,
                       displayName: alumno.nombre,
                     ),
-                    title: Text('${alumno.nombre}'),
+                    title: Text(alumno.nombre!.toUpperCaseWords()),
                     subtitle: Text('${alumno.curso}'),
                     trailing: Checkbox(
                       value: alumno.createdCard,

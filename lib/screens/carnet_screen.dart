@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:colegio/class/alumno.dart';
 import 'package:flutter/material.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:rs_tools/rs_tools.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
@@ -85,7 +86,9 @@ class _CarnetScreenState extends State<CarnetScreen> {
                     height: 1004 / 2,
                     child: WidgetsToImage(
                       controller: controller,
-                      child: FrontalWidget(alumno: widget.alumno),
+                      child: selected.first == 'Frontal'
+                          ? FrontalWidget(alumno: widget.alumno)
+                          : BackWidget(alumno: widget.alumno),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -117,7 +120,7 @@ class _CarnetScreenState extends State<CarnetScreen> {
     setState(() {
       isLoading = true;
     });
-    debugPrint('dace esto1');
+
     await Future.delayed(const Duration(seconds: 2));
     String fileName = widget.alumno.nombre ?? 'file';
     fileName = fileName.split(' ').join('_');
@@ -132,27 +135,21 @@ class _CarnetScreenState extends State<CarnetScreen> {
     anchor.click();
     anchor.remove();
     html.Url.revokeObjectUrl(url);
-    await Future.delayed(const Duration(seconds: 2));
-    debugPrint('dace esto2');
+
     setState(() {
       isLoading = false;
     });
   }
 }
 
-class FrontalWidget extends StatefulWidget {
+class FrontalWidget extends StatelessWidget {
   final Alumno alumno;
   const FrontalWidget({super.key, required this.alumno});
 
   @override
-  State<FrontalWidget> createState() => _FrontalWidgetState();
-}
-
-class _FrontalWidgetState extends State<FrontalWidget> {
-  @override
   Widget build(BuildContext context) {
     double width = 638 / 2;
-    List<String> name = widget.alumno.nombre!.split(' ');
+    List<String> name = alumno.nombre!.split(' ');
     String firstName = name.first;
     name.removeAt(0);
     String lastName = name.join(' ');
@@ -166,6 +163,19 @@ class _FrontalWidgetState extends State<FrontalWidget> {
               'assets/fondo.png',
               width: 638 / 2,
               height: 1004 / 2,
+            ),
+          ),
+          Positioned(
+            bottom: 5,
+            right: 2,
+            child: Opacity(
+              opacity: 1,
+              child: Image.asset(
+                'assets/logo_colegio.png',
+                width: 90,
+                // height: 1004 / 4,
+                // fit: BoxFit.cover,
+              ),
             ),
           ),
           Center(
@@ -184,9 +194,9 @@ class _FrontalWidgetState extends State<FrontalWidget> {
                     borderPadding: 0,
                     borderColor: const Color(0xff003a6d),
                     placeholder: 'assets/logo_colegio.png',
-                    image: widget.alumno.fotoUrl,
+                    image: alumno.fotoUrl,
                     cacheEnabled: true,
-                    displayName: widget.alumno.nombre,
+                    displayName: alumno.nombre,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -199,21 +209,143 @@ class _FrontalWidgetState extends State<FrontalWidget> {
                   ),
                 ),
                 Text(
-                  lastName,
+                  lastName.toUpperCaseWords(),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 17,
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text('Id: ${widget.alumno.documentId}'),
+                const SizedBox(height: 8),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 48.0),
                   child: Text(
-                    'Curso: ${widget.alumno.curso}',
+                    '${alumno.curso}',
                     textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                const SizedBox(height: 8),
+                Text(
+                  alumno.documentId,
+                  style: const TextStyle(
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                    color: Color(0xff003a6d),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BackWidget extends StatelessWidget {
+  final Alumno alumno;
+  const BackWidget({Key? key, required this.alumno}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // double width = 638 / 2;
+    // List<String> name = alumno.nombre!.split(' ');
+    // String firstName = name.first;
+    // name.removeAt(0);
+    // String lastName = name.join(' ');
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: 0.8,
+            child: Image.asset(
+              'assets/fondo_back.png',
+              width: 638 / 2,
+              height: 1004 / 2,
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: PrettyQr(
+                      image: const AssetImage('assets/logo_colegio.png'),
+                      typeNumber: 3,
+                      size: 200,
+                      data: alumno.documentId,
+                      errorCorrectLevel: QrErrorCorrectLevel.M,
+                      roundEdges: true,
+                    )),
+                const SizedBox(height: 16),
+                const Text(
+                  'Instituto Privado\nRio Blanco',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 25,
+                    color: Color(0xff003a6d),
+                  ),
+                ),
+                const Text(
+                  'San Pedro Sula',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Valido hasta Diciembre 2023',
+                  style: TextStyle(
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                    color: Color(0xff003a6d),
+                  ),
+                ),
+                const Spacer(),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          alumno.nombre!.toUpperCaseWords(),
+                          textAlign: TextAlign.right,
+                        ),
+                        Opacity(
+                          opacity: 0.5,
+                          child: Text(
+                            alumno.documentId,
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                //   child: Text(
+                //     'Curso: ${alumno.curso}',
+                //     textAlign: TextAlign.center,
+                //   ),
+                // ),
               ],
             ),
           ),
