@@ -13,7 +13,7 @@ class AuthEventInitial extends AuthEvent {}
 class SignedOutEvent extends AuthEvent {}
 
 class ChangedUserEvent extends AuthEvent {
-  final User user;
+  final User? user;
 
   final bool userLoaded;
   const ChangedUserEvent(this.user, this.userLoaded);

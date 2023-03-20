@@ -4,7 +4,10 @@ import 'package:colegio/class/gestu_navigate.dart';
 import 'package:colegio/screens/add_alumno_screen.dart';
 import 'package:colegio/screens/carnet_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rs_tools/rs_tools.dart';
+
+import '../blocs/authentication/auth_bloc/auth_bloc.dart';
 
 class ListaAlumnosScreen extends StatefulWidget {
   const ListaAlumnosScreen({super.key});
@@ -26,6 +29,12 @@ class _ListaAlumnosScreenState extends State<ListaAlumnosScreen> {
               gestuNavigatePushTo(context, child: const AgregarAlumnoScreen());
             },
             child: const Text('Agregar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              BlocProvider.of<AuthBloc>(context).add(SignedOutEvent());
+            },
+            child: const Icon(Icons.logout),
           ),
         ],
       ),

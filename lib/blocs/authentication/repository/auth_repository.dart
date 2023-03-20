@@ -19,10 +19,10 @@ class AuthRepository {
   final fir_auth.FirebaseAuth _firebaseAuth;
   // final GoogleSignIn _googleSignIn;
 
-  Stream<User> get userFir => _firebaseAuth.authStateChanges().map(
+  Stream<User?> get userFir => _firebaseAuth.authStateChanges().map(
         (firUser) {
           if (firUser == null) {
-            return User.empty;
+            return null;
           } else {
             return firUser.toUser;
           }
@@ -46,19 +46,16 @@ class AuthRepository {
   }
 
   Future<List<Alumno>> getAlumnos() {
-    print('entra aqui??');
     try {
       return fir_store.FirebaseFirestore.instance
           .collection('alumnos')
           .get()
           .then((snapshot) {
-        print('snapshot:$snapshot');
         return snapshot.docs
             .map((e) => Alumno(documentId: e.id, data: e.data()))
             .toList();
       });
     } catch (e) {
-      print(e);
       return Future.value([]);
     }
   }

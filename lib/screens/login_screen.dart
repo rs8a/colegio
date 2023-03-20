@@ -78,7 +78,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
             BoxShadow(
               blurRadius: 30.0,
               offset: const Offset(0, 10),
-              color: Theme.of(context).shadowColor.withOpacity(0.5),
+              color: Theme.of(context).shadowColor.withOpacity(0.1),
             )
           ],
           color: Theme.of(context).scaffoldBackgroundColor,
@@ -91,9 +91,14 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/logo_colegio.png',
+                SizedBox(
                   height: 300,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/logo_colegio.png',
+                      height: 200,
+                    ),
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(

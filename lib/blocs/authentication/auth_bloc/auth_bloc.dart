@@ -12,7 +12,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
-  StreamSubscription<User>? _userFirListener;
+  StreamSubscription<User?>? _userFirListener;
   StreamSubscription<User>? _userDataListener;
 
   AuthBloc({required AuthRepository authRepository})
@@ -22,7 +22,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         .listen((user) => add(ChangedUserEvent(user, false)));
 
     on<ChangedUserEvent>((event, emit) async {
-      emit(AuthenticatedState(event.user, true));
+      if (event.user == null) {
+        emit(UnauthenticatedState());
+      } else {
+        emit(AuthenticatedState(event.user, true));
+      }
     });
 
     on<SignedOutEvent>((event, emit) async {
